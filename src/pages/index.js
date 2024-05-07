@@ -1,4 +1,6 @@
 "use client";
+import BorderedButtonComponent from "@/components/common/BorderedButtonComponent";
+import ButtonComponent from "@/components/common/ButtonComponent";
 import { AuroraBackground } from "@/components/landingPageComponents/aurora-background";
 import { motion } from "framer-motion";
 import React from "react";
@@ -25,12 +27,8 @@ export default function Home() {
         Master Your Finances, Grow Your Wealth. Track, Save, Invest and repeat.
         </div>
         <div className="flex justify-between items-center flex-wrap gap-6 mt-8"> 
-        <button className="bg-transperant rounded-lg w-fit text-white px-4 py-3 border  tracking-wider border-yellow-500 hover:bg-yellow-500">
-          Browse stocks
-        </button>
-        <button className="bg-yellow-500 rounded-lg w-fit text-white tracking-wider px-4 py-3  hover:bg-yellow-600">
-          Track Expense
-        </button>
+        <BorderedButtonComponent name={"Browse stocks"}/>
+       <ButtonComponent name={"Track expense"}/>
         </div>
       </motion.div>
     </AuroraBackground>
