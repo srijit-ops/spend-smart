@@ -1,7 +1,7 @@
 "use client";
 import BorderedButtonComponent from "@/components/common/BorderedButtonComponent";
 import ButtonComponent from "@/components/common/ButtonComponent";
-import { AuroraBackground } from "@/components/landingPageComponents/aurora-background";
+import { AuroraBackground } from "../components/landingPageComponents/aurora-background";
 import { motion } from "framer-motion";
 import React from "react";
 
@@ -27,8 +27,12 @@ export default function Home() {
         Master Your Finances, Grow Your Wealth. Track, Save, Invest and repeat.
         </div>
         <div className="flex justify-between items-center flex-wrap gap-6 mt-8"> 
-        <BorderedButtonComponent name={"Browse stocks"}/>
-       <ButtonComponent name={"Track expense"}/>
+        <BorderedButtonComponent>
+          <p>Browse stocks</p>
+        </BorderedButtonComponent>
+       <ButtonComponent>
+        <p>Track expense</p>
+       </ButtonComponent>
         </div>
       </motion.div>
     </AuroraBackground>
