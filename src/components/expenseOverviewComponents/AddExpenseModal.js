@@ -19,7 +19,7 @@ function AddExpenseModal({open, onCloseModal, title}) {
     expenseType: yup.string().required("Expense type is required")
   })
 
-  const {handleSubmit, control, formState:{errors}}= useForm(
+  const {handleSubmit, control, reset, formState:{errors}}= useForm(
     {
     resolver: yupResolver(validationSchema),
     default:{
@@ -33,6 +33,7 @@ function AddExpenseModal({open, onCloseModal, title}) {
   const onSubmit=(data)=>{
     console.log(data)
     onCloseModal()
+    reset()
   }
 
   const expenseTypeOptions=[
@@ -79,8 +80,8 @@ function AddExpenseModal({open, onCloseModal, title}) {
           <Controller
           control={control}
           name='expenseType'
-          render={({field: {onChange}})=>
-            <RadioInput mainLabel={"Expense type"} error={errors.expenseType?.message} onChange={onChange} radioOptions={expenseTypeOptions}/>
+          render={({field: {onChange, value}})=>
+            <RadioInput mainLabel={"Expense type"} error={errors.expenseType?.message} onChange={(e) =>onChange(e.target.value)} radioOptions={expenseTypeOptions} value={value}/>
           }
           />
           <input type='submit'/>

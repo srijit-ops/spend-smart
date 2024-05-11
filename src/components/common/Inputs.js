@@ -10,7 +10,7 @@ export const TextInput=({label, type, placeholder, error, labelStyle, inputStyle
   )
 }
 
-export const RadioInput= ({mainLabel, radioOptions})=>{
+export const RadioInput= ({mainLabel, radioOptions, onChange, value, error})=>{
     return(
         <div className='my-4 flex flex-col'>
         <label className='text-gray-200 tracking-wider mb-3'>{mainLabel}</label>
@@ -18,14 +18,15 @@ export const RadioInput= ({mainLabel, radioOptions})=>{
         {
                 radioOptions?.map((item, index)=>{
                     return(
-                        <div className='flex justify-start items-center gap-3' key={index}>
-                             <input type='radio' value={item.value} id={item.id}/>
+                        <div className='flex justify-start items-center gap-3 mb-3' key={index}>
+                             <input type='radio' value={item.value} id={item.id} onChange={onChange}  checked={value === item.value}/>
                             <label htmlFor={item.id} className='text-white'>{item.sublebel}</label>
                         </div>
                     )
                 })
             }
         </div>
+        <p className='tracking-wider text-red-500 text-[0.9rem]'>{error}</p>
         </div>
     )
 }
