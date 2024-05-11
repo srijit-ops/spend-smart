@@ -1,22 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CustomModal from '../common/CustomModal'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { RadioInput, TextInput } from '../common/Inputs'
+import CreatableSelect from 'react-select/creatable';
+import ButtonComponent from '../common/ButtonComponent'
+
 
 function AddExpenseModal({open, onCloseModal, title}) {
 
+  const [categoryOptions, setCategoryOptions] = useState([
+    { label: 'Entertainment', value: 'Entertainment' },
+    { label: 'Medicine', value: 'Medicine' },
+    { label: 'Food', value: 'Food' },
+    { label: 'Rent', value: 'Rent' },
+    { label: 'Shopping', value: 'Shopping' },
+    { label: 'Transport', value: 'Transport' }
+  ])
+
   const validationSchema= yup.object({
     expenseName: yup.string().required("Expense name is required"),
-    expenseDetail: yup.string().test({
-      name: 'max',
-      exclusive:true,
-      message: "Expense detail must not exceed 30 characters",
-      test: (value)=> value?.length <= 30
-    }),
+    expenseDetail: yup.string().max(30, "Expense detail must not exceed 30 characters")
+    ,
     amount: yup.number().min(1).required("Expense amount is required"),
-    expenseType: yup.string().required("Expense type is required")
+    expenseType: yup.string().required("Expense type is required"),
+    expenseCategory: yup.string().required("Expense category is required")
   })
 
   const {handleSubmit, control, reset, formState:{errors}}= useForm(
@@ -26,10 +35,13 @@ function AddExpenseModal({open, onCloseModal, title}) {
       expenseName:"",
       expenseDetail:"",
       amount: null,
-      expenseType:""
+      expenseType:"",
+      expenseCategory: ""
     }
     }
   )
+
+
   const onSubmit=(data)=>{
     console.log(data)
     onCloseModal()
@@ -48,6 +60,27 @@ function AddExpenseModal({open, onCloseModal, title}) {
       sublebel:"Credit"
     }
   ]
+
+
+  const customStyles={
+    control: (baseStyles, state) => ({
+      ...baseStyles,
+     backgroundColor:"#141416",
+    }),
+    option: (baseStyles, state) => ({
+      ...baseStyles,
+      backgroundColor: "#141416", 
+      color: "white",
+    }),
+    menu: (baseStyles, state) => ({
+      ...baseStyles,
+      backgroundColor: "#141416", 
+    }),
+    singleValue: (baseStyles, state) => ({
+      ...baseStyles,
+      color: 'white'
+    })
+  }
 
   return (
     <CustomModal
@@ -71,6 +104,30 @@ function AddExpenseModal({open, onCloseModal, title}) {
           }
           />
           <Controller
+          name='expenseCategory'
+          control={control}
+          render={({field:{onChange}})=>
+            <div className='my-4 flex flex-col'>
+              <label className='text-gray-200 tracking-wider mb-3'>Select expense category</label>
+              <CreatableSelect
+              onChange={(e)=>{
+                if(e){
+                  onChange(e.value)
+                setCategoryOptions([...categoryOptions,e])
+                }
+                // onChange("")
+              }
+              }
+        isClearable
+        options={categoryOptions}
+        styles={customStyles}
+      />
+      <p className='tracking-wider text-red-500 mt-3 text-[0.9rem]'>{errors.expenseCategory?.message}</p>
+            </div>
+            
+          }
+          />
+          <Controller
           control={control}
           name='amount'
           render={({field: {onChange}})=>
@@ -81,10 +138,14 @@ function AddExpenseModal({open, onCloseModal, title}) {
           control={control}
           name='expenseType'
           render={({field: {onChange, value}})=>
-            <RadioInput mainLabel={"Expense type"} error={errors.expenseType?.message} onChange={(e) =>onChange(e.target.value)} radioOptions={expenseTypeOptions} value={value}/>
+            <RadioInput mainLabel={"Expense type"} error={errors.expenseType?.message} onChange={onChange} radioOptions={expenseTypeOptions} value={value}/>
           }
           />
-          <input type='submit'/>
+          <div className='w-full flex justify-center items-center'>
+          <ButtonComponent type={"submit"}>
+          <p>Submit</p>
+          </ButtonComponent>
+          </div>
         </form>
       </CustomModal>
   )
