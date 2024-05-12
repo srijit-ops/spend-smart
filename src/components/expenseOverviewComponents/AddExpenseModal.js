@@ -1,154 +1,219 @@
-import React, { useState } from 'react'
-import CustomModal from '../common/CustomModal'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { RadioInput, TextInput } from '../common/Inputs'
-import CreatableSelect from 'react-select/creatable';
-import ButtonComponent from '../common/ButtonComponent'
+import React, { useState } from "react";
+import CustomModal from "../common/CustomModal";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { RadioInput, TextInput } from "../common/Inputs";
+import CreatableSelect from "react-select/creatable";
+import ButtonComponent from "../common/ButtonComponent";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from "dayjs";
+import Styles from "../../styles/addExpenseModal.module.css"
 
-
-function AddExpenseModal({open, onCloseModal, title}) {
-
+function AddExpenseModal({ open, onCloseModal, title }) {
   const [categoryOptions, setCategoryOptions] = useState([
-    { label: 'Entertainment', value: 'Entertainment' },
-    { label: 'Medicine', value: 'Medicine' },
-    { label: 'Food', value: 'Food' },
-    { label: 'Rent', value: 'Rent' },
-    { label: 'Shopping', value: 'Shopping' },
-    { label: 'Transport', value: 'Transport' }
-  ])
+    { label: "Entertainment", value: "Entertainment" },
+    { label: "Medicine", value: "Medicine" },
+    { label: "Food", value: "Food" },
+    { label: "Rent", value: "Rent" },
+    { label: "Shopping", value: "Shopping" },
+    { label: "Transport", value: "Transport" },
+  ]);
 
-  const validationSchema= yup.object({
+  const validationSchema = yup.object({
     expenseName: yup.string().required("Expense name is required"),
-    expenseDetail: yup.string().max(30, "Expense detail must not exceed 30 characters")
-    ,
+    expenseDetail: yup
+      .string()
+      .max(30, "Expense detail must not exceed 30 characters"),
     amount: yup.number().min(1).required("Expense amount is required"),
     expenseType: yup.string().required("Expense type is required"),
-    expenseCategory: yup.string().required("Expense category is required")
-  })
+    expenseCategory: yup.string().required("Expense category is required"),
+    date: yup.date().required("Expense date is required"),
+  });
 
-  const {handleSubmit, control, reset, formState:{errors}}= useForm(
-    {
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(validationSchema),
-    default:{
-      expenseName:"",
-      expenseDetail:"",
+    default: {
+      expenseName: "",
+      expenseDetail: "",
       amount: null,
-      expenseType:"",
-      expenseCategory: ""
-    }
-    }
-  )
+      expenseType: "",
+      expenseCategory: "",
+      date: dayjs().toDate(),
+      time: null,
+    },
+  });
 
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(typeof data.date);
+    onCloseModal();
+    reset();
+  };
 
-  const onSubmit=(data)=>{
-    console.log(data)
-    onCloseModal()
-    reset()
-  }
-
-  const expenseTypeOptions=[
+  const expenseTypeOptions = [
     {
-      id:"debit",
-      value:"debit",
-      sublebel:"Debit"
+      id: "debit",
+      value: "debit",
+      sublebel: "Debit",
     },
     {
-      id:"credit",
-      value:"credit",
-      sublebel:"Credit"
-    }
-  ]
+      id: "credit",
+      value: "credit",
+      sublebel: "Credit",
+    },
+  ];
 
-
-  const customStyles={
+  const customStyles = {
     control: (baseStyles, state) => ({
       ...baseStyles,
-     backgroundColor:"#141416",
+      backgroundColor: "#141416",
     }),
     option: (baseStyles, state) => ({
       ...baseStyles,
-      backgroundColor: "#141416", 
+      backgroundColor: "#141416",
       color: "white",
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
-      backgroundColor: "#141416", 
+      backgroundColor: "#141416",
     }),
     singleValue: (baseStyles, state) => ({
       ...baseStyles,
-      color: 'white'
-    })
-  }
+      color: "white",
+    }),
+  };
 
   return (
-    <CustomModal
-        open={open}
-        onCloseModal={onCloseModal}
-        title={title}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} className='mt-7'>
-          <Controller
+    <CustomModal open={open} onCloseModal={onCloseModal} title={title}>
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-7">
+        <Controller
           control={control}
-          name='expenseName'
-          render={({field: {onChange}})=>
-            <TextInput type={"text"} placeholder={"Expense name"} label={"Expense name"} error={errors.expenseName?.message} onChange={onChange}/>
-          }
-          />
-          <Controller
+          name="expenseName"
+          render={({ field: { onChange } }) => (
+            <TextInput
+              type={"text"}
+              placeholder={"Expense name"}
+              label={"Expense name"}
+              error={errors.expenseName?.message}
+              onChange={onChange}
+            />
+          )}
+        />
+        <Controller
           control={control}
-          name='expenseDetail'
-          render={({field: {onChange}})=>
-            <TextInput type={"text"} placeholder={"Expense description"} label={"Expense description"} error={errors.expenseDetail?.message} onChange={onChange}/>
-          }
-          />
-          <Controller
-          name='expenseCategory'
+          name="expenseDetail"
+          render={({ field: { onChange } }) => (
+            <TextInput
+              type={"text"}
+              placeholder={"Expense description"}
+              label={"Expense description"}
+              error={errors.expenseDetail?.message}
+              onChange={onChange}
+            />
+          )}
+        />
+        <Controller
+          name="expenseCategory"
           control={control}
-          render={({field:{onChange}})=>
-            <div className='my-4 flex flex-col'>
-              <label className='text-gray-200 tracking-wider mb-3'>Select expense category</label>
+          render={({ field: { onChange } }) => (
+            <div className="my-4 flex flex-col">
+              <label className="text-gray-200 tracking-wider mb-3">
+                Select expense category
+              </label>
               <CreatableSelect
-              onChange={(e)=>{
-                if(e){
-                  onChange(e.value)
-                setCategoryOptions([...categoryOptions,e])
-                }
-                // onChange("")
-              }
-              }
-        isClearable
-        options={categoryOptions}
-        styles={customStyles}
-      />
-      <p className='tracking-wider text-red-500 mt-3 text-[0.9rem]'>{errors.expenseCategory?.message}</p>
+                onChange={(e) => {
+                  if (e) {
+                    onChange(e.value);
+                    setCategoryOptions([...categoryOptions, e]);
+                  }
+                  // onChange("")
+                }}
+                isClearable
+                options={categoryOptions}
+                styles={customStyles}
+              />
+              <p className="tracking-wider text-red-500 mt-3 text-[0.9rem]">
+                {errors.expenseCategory?.message}
+              </p>
             </div>
-            
-          }
-          />
-          <Controller
+          )}
+        />
+        <Controller
           control={control}
-          name='amount'
-          render={({field: {onChange}})=>
-            <TextInput type={"number"} placeholder={"Enter the amount"} label={"Expense amount"} error={errors.amount?.message} onChange={onChange}/>
-          }
-          />
-          <Controller
+          name="amount"
+          render={({ field: { onChange } }) => (
+            <TextInput
+              type={"number"}
+              placeholder={"Enter the amount"}
+              label={"Expense amount"}
+              error={errors.amount?.message}
+              onChange={onChange}
+            />
+          )}
+        />
+        <Controller
           control={control}
-          name='expenseType'
+          name="expenseType"
+          render={({ field: { onChange, value } }) => (
+            <RadioInput
+              mainLabel={"Expense type"}
+              error={errors.expenseType?.message}
+              onChange={onChange}
+              radioOptions={expenseTypeOptions}
+              value={value}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="date"
+          render={({ field: { onChange, value } }) => (
+            <div className={`my-4 flex flex-col ${Styles.datePicker}`}>
+              <label className="text-gray-200 tracking-wider mb-3">
+                Select expense date and time
+              </label>
+              {/* <TextInput type={"date"} placeholder={"Enter the expense date"} label={"Expense date"} error={errors.date?.message} onChange={onChange}/> */}
+              <DatePicker
+                selected={value}
+                onChange={onChange}
+                // showTimeSelect
+                // dateFormat="Pp"
+                placeholderText="Click to select date and time"
+                minDate={dayjs().subtract(2, 'days').toDate()}
+                maxDate={dayjs().toDate()}
+                timeInputLabel="Time:"
+                dateFormat="MM/dd/yyyy h:mm aa"
+                showTimeInput
+                calendarClassName="bg-black"
+              />
+              <p className="tracking-wider text-red-500 mt-3 text-[0.9rem]">
+                {errors.date?.message}
+              </p>
+            </div>
+          )}
+        />
+        {/* <Controller
+          control={control}
+          name='time'
           render={({field: {onChange, value}})=>
-            <RadioInput mainLabel={"Expense type"} error={errors.expenseType?.message} onChange={onChange} radioOptions={expenseTypeOptions} value={value}/>
+            <TextInput type={"time"} placeholder={"Enter the expense time"} label={"Expense time"} error={errors.time?.message} onChange={onChange}/>
           }
-          />
-          <div className='w-full flex justify-center items-center'>
+          /> */}
+        <div className="w-full flex justify-center items-center">
           <ButtonComponent type={"submit"}>
-          <p>Submit</p>
+            <p>Submit</p>
           </ButtonComponent>
-          </div>
-        </form>
-      </CustomModal>
-  )
+        </div>
+      </form>
+    </CustomModal>
+  );
 }
 
-export default AddExpenseModal
+export default AddExpenseModal;
