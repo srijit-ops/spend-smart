@@ -52,7 +52,47 @@ function AddExpenseModal({ open, onCloseModal, title }) {
 
   const onSubmit = (data) => {
     console.log(data);
-    console.log(typeof data.date);
+    console.log(dayjs(data.date).toISOString());
+    console.log(JSON.parse(localStorage.getItem("transactionData")))
+
+    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || []
+    const newData= {
+      date: dayjs(data.date).toISOString().split('T')[0],
+      transactions:[
+        {
+          // id:,
+          ...data
+        }
+      ]
+    }
+    // if(allTransactions){
+      console.log(allTransactions,"moth ka middle hai bro")
+      const dateMatch= allTransactions.findIndex(item=>item.date=== dayjs(data.date).toISOString().split('T')[0])
+      if(dateMatch!==-1){
+        allTransactions[dateMatch].transactions.push(data)
+      }else{
+        allTransactions.push(newData)
+      }
+      localStorage.setItem("transactionData", JSON.stringify(allTransactions))
+    // }
+
+    //when a new month is starting and no data there in storage
+
+    // const newData=[
+    //   // {
+    //   //   date: dayjs(data.date).toISOString(),
+    //   //   transactions:[
+    //   //     {
+    //   //       // id:,
+    //   //       ...data
+    //   //     }
+    //   //   ]
+    //   // }
+    // ]
+    // newData.push(commonData)
+    // console.log(newData)
+    // localStorage.setItem("transactionData", JSON.stringify(newData))
+
     onCloseModal();
     reset();
   };
@@ -187,6 +227,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
                 // dateFormat="Pp"
                 placeholderText="Click to select date and time"
                 minDate={dayjs().subtract(2, 'days').toDate()}
+                // minDate={dayjs().toDate()}
                 maxDate={dayjs().toDate()}
                 timeInputLabel="Time:"
                 dateFormat="MM/dd/yyyy h:mm aa"
