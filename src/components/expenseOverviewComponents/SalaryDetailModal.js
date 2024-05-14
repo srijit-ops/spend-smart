@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TextInput } from '../common/Inputs';
 import CreatableSelect from "react-select/creatable";
 import ButtonComponent from '../common/ButtonComponent';
+import dayjs from 'dayjs';
 
 function SalaryDetailModal({ open, onCloseModal, title }) {
 
@@ -61,7 +62,14 @@ const customStyles = {
   };
 
   const onSubmit=(data)=>{
-    console.log(data)
+    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
+    const currentMonthYear= dayjs(data.date).format('YYYY-MM')
+    allTransactions[currentMonthYear]={
+        salary: data.salary,
+        targetPercentage: data.targetPercentage,
+        transactions: []
+    }
+    localStorage.setItem("transactionData", JSON.stringify(allTransactions))
     reset()
     onCloseModal()
   }

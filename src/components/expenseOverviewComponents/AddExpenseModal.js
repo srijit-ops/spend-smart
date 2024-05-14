@@ -55,7 +55,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     console.log(dayjs(data.date).toISOString());
     console.log(JSON.parse(localStorage.getItem("transactionData")))
 
-    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
+    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) 
     // const newData= {
     //   date: dayjs(data.date).toISOString().split('T')[0],
     //   transactions:[
@@ -67,13 +67,14 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     // }
 
     const currentMonthYear= dayjs(data.date).format('YYYY-MM')
-   const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
-   if(monthMatch!==-1){
-    allTransactions[currentMonthYear].push(data)
+  //  const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
+  //  if(monthMatch!==-1){
+
+    allTransactions[currentMonthYear].transactions.push(data)
   
-   }else{
-    allTransactions[currentMonthYear] = [data] 
-   }
+  //  }else{
+  //   allTransactions[currentMonthYear] = [data] 
+  //  }
    localStorage.setItem("transactionData", JSON.stringify(allTransactions))
     // if(allTransactions){
       // console.log(allTransactions,"moth ka middle hai bro")
