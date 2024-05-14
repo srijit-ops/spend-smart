@@ -1,18 +1,33 @@
 import BorderedButtonComponent from '@/components/common/BorderedButtonComponent'
 import ButtonComponent from '@/components/common/ButtonComponent'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import OverviewCard from '@/components/expenseOverviewComponents/OverviewCard'
 import AddExpenseModal from '@/components/expenseOverviewComponents/AddExpenseModal'
+import dayjs from 'dayjs'
+import SalaryDetailModal from '@/components/expenseOverviewComponents/SalaryDetailModal'
 
 
 function ExpenseOverview() {
 
-  const [open, setOpen] = useState(false)
+  const [openAddExpense, setOpenAddExpense] = useState(false)
+  const [openSalaryModal, setOpenSalaryModal] = useState(false)
 
-  const onCloseModal=()=>{
-    setOpen(false)
+  const closeAddExpenseModal=()=>{
+    setOpenAddExpense(false)
   }
+  const closeSalaryModal=()=>{
+    setOpenSalaryModal(false)
+  }
+
+  useEffect(()=>{
+    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
+    const currentMonthYear= dayjs().format('YYYY-MM')
+   const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
+   if(monthMatch==-1){
+    setOpenSalaryModal(true)
+   }
+  },[])
 
   return (
     <div className='w-full py-5 px-6'>
@@ -22,7 +37,7 @@ function ExpenseOverview() {
             <BorderedButtonComponent>
               <p>Select month</p>
             </BorderedButtonComponent>
-            <ButtonComponent style={{paddingBottom:"0.5rem", paddingTop:"0.5rem"}} onClick={()=>setOpen(true)}>
+            <ButtonComponent style={{paddingBottom:"0.5rem", paddingTop:"0.5rem"}} onClick={()=>setOpenAddExpense(true)}>
               <p className='flex justify-center items-center gap-1'> <span className='text-2xl'>+</span> Add expense</p>
             </ButtonComponent>
             {/* <button>All transactions</button> */}
@@ -60,7 +75,8 @@ function ExpenseOverview() {
           </div>
       </div>
       </div>
-      <AddExpenseModal open={open} onCloseModal={onCloseModal} title={"Add new expense"}/>
+      <AddExpenseModal open={openAddExpense} onCloseModal={closeAddExpenseModal} title={"Add new expense"}/>
+      <SalaryDetailModal open={openSalaryModal} onCloseModal={closeSalaryModal} title={"Enter salary & target"}/>
     </div>
   )
 }

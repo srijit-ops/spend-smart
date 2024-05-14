@@ -55,25 +55,35 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     console.log(dayjs(data.date).toISOString());
     console.log(JSON.parse(localStorage.getItem("transactionData")))
 
-    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || []
-    const newData= {
-      date: dayjs(data.date).toISOString().split('T')[0],
-      transactions:[
-        {
-          // id:,
-          ...data
-        }
-      ]
-    }
+    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
+    // const newData= {
+    //   date: dayjs(data.date).toISOString().split('T')[0],
+    //   transactions:[
+    //     {
+    //       // id:,
+    //       ...data
+    //     }
+    //   ]
+    // }
+
+    const currentMonthYear= dayjs(data.date).format('YYYY-MM')
+   const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
+   if(monthMatch!==-1){
+    allTransactions[currentMonthYear].push(data)
+  
+   }else{
+    allTransactions[currentMonthYear] = [data] 
+   }
+   localStorage.setItem("transactionData", JSON.stringify(allTransactions))
     // if(allTransactions){
-      console.log(allTransactions,"moth ka middle hai bro")
-      const dateMatch= allTransactions.findIndex(item=>item.date=== dayjs(data.date).toISOString().split('T')[0])
-      if(dateMatch!==-1){
-        allTransactions[dateMatch].transactions.push(data)
-      }else{
-        allTransactions.push(newData)
-      }
-      localStorage.setItem("transactionData", JSON.stringify(allTransactions))
+      // console.log(allTransactions,"moth ka middle hai bro")
+      // const dateMatch= allTransactions.findIndex(item=>item.date=== dayjs(data.date).toISOString().split('T')[0])
+      // if(dateMatch!==-1){
+      //   allTransactions[dateMatch].transactions.push(data)
+      // }else{
+      //   allTransactions.push(newData)
+      // }
+      // localStorage.setItem("transactionData", JSON.stringify(allTransactions))
     // }
 
     //when a new month is starting and no data there in storage
