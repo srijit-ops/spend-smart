@@ -239,7 +239,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
                 placeholderText="Click to select date and time"
                 minDate={dayjs().subtract(2, 'days').toDate()}
                 // minDate={dayjs().toDate()}
-                maxDate={dayjs().toDate()}
+                // maxDate={dayjs().toDate()}
                 timeInputLabel="Time:"
                 dateFormat="MM/dd/yyyy h:mm aa"
                 showTimeInput

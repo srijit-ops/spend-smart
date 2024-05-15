@@ -4,9 +4,23 @@ import ButtonComponent from "@/components/common/ButtonComponent";
 import { AuroraBackground } from "../components/landingPageComponents/aurora-background";
 import { motion } from "framer-motion";
 import React from "react";
+import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 
 export default function Home() {
+
+  const router= useRouter()
+  const selectedMonth= dayjs().format('YYYY-MM')
+  const expenseHandler=()=>{
+    router.push({
+      pathname:'expense-overview',
+      query:{
+        month: selectedMonth
+      }
+    })
+  }
+
   return (
     <main>
     <AuroraBackground>
@@ -30,7 +44,7 @@ export default function Home() {
         <BorderedButtonComponent>
           <p>Browse stocks</p>
         </BorderedButtonComponent>
-       <ButtonComponent>
+       <ButtonComponent onClick={expenseHandler}>
         <p>Track expense</p>
        </ButtonComponent>
         </div>

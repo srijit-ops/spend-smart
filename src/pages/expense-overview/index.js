@@ -6,12 +6,16 @@ import OverviewCard from '@/components/expenseOverviewComponents/OverviewCard'
 import AddExpenseModal from '@/components/expenseOverviewComponents/AddExpenseModal'
 import dayjs from 'dayjs'
 import SalaryDetailModal from '@/components/expenseOverviewComponents/SalaryDetailModal'
-
+import SelectMonthModal from '@/components/expenseOverviewComponents/SelectMonthModal'
+import { useSearchParams } from 'next/navigation'
 
 function ExpenseOverview() {
 
+    const searchParams= useSearchParams()
   const [openAddExpense, setOpenAddExpense] = useState(false)
   const [openSalaryModal, setOpenSalaryModal] = useState(false)
+  const [openSelectMonthModal, setOpenSelectMonthModal] = useState(false)
+  // const [selectedMonth, setSelectedMonth] = useState()
 
   const closeAddExpenseModal=()=>{
     setOpenAddExpense(false)
@@ -19,14 +23,21 @@ function ExpenseOverview() {
   const closeSalaryModal=()=>{
     setOpenSalaryModal(false)
   }
-
+  const closeSelectMonthModal=()=>{
+    setOpenSelectMonthModal(false)
+  }
   useEffect(()=>{
-    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
-    const currentMonthYear= dayjs().format('YYYY-MM')
-   const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
-   if(monthMatch==-1){
-    setOpenSalaryModal(true)
-   }
+    const currentMonthYear= searchParams.get("month")
+    if(currentMonthYear){
+      const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
+      // const currentMonthYear= dayjs().format('YYYY-MM')
+      console.log(currentMonthYear)
+     const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
+     if(monthMatch==-1){
+      setOpenSalaryModal(true)
+     }
+    }
+
   },[])
 
   return (
@@ -34,9 +45,13 @@ function ExpenseOverview() {
       <div className='flex justify-between items-center flex-wrap w-full mb-12'>
         <h2 className='text-white text-4xl tracking-wider font-semibold'>Overview</h2>
         <div className='flex justify-between items-center gap-3'>
-            <BorderedButtonComponent>
+            {
+              typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem("transactionData")) &&
+              <BorderedButtonComponent onClick={()=>setOpenSelectMonthModal(true)}>
               <p>Select month</p>
             </BorderedButtonComponent>
+            }
+            
             <ButtonComponent style={{paddingBottom:"0.5rem", paddingTop:"0.5rem"}} onClick={()=>setOpenAddExpense(true)}>
               <p className='flex justify-center items-center gap-1'> <span className='text-2xl'>+</span> Add expense</p>
             </ButtonComponent>
@@ -77,6 +92,7 @@ function ExpenseOverview() {
       </div>
       <AddExpenseModal open={openAddExpense} onCloseModal={closeAddExpenseModal} title={"Add new expense"}/>
       <SalaryDetailModal open={openSalaryModal} onCloseModal={closeSalaryModal} title={"Enter salary & target"}/>
+      <SelectMonthModal open={openSelectMonthModal} onCloseModal={closeSelectMonthModal} title={"Select a month"}/>
     </div>
   )
 }
