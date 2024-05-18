@@ -8,12 +8,14 @@ import dayjs from 'dayjs'
 import SalaryDetailModal from './SalaryDetailModal'
 import SelectMonthModal from './SelectMonthModal'
 import { useSearchParams } from 'next/navigation'
+import PieChart from './PieChart'
+import { useRouter } from 'next/router'
 
 
 function MainOverview() {
     const searchParams= useSearchParams()
     const currentMonthYear= searchParams.get("month")
-
+    const router= useRouter()
 const [openAddExpense, setOpenAddExpense] = useState(false)
 const [openSalaryModal, setOpenSalaryModal] = useState(false)
 const [openSelectMonthModal, setOpenSelectMonthModal] = useState(false)
@@ -56,7 +58,7 @@ if(typeof localStorage !== 'undefined'){
   }
 
 // console.log(newTotalIncome)
-let remainingBal= [(totalIncome-targetSaving)-totalExpense]
+let remainingBal= (totalIncome-targetSaving)<=totalExpense ? 0: [(totalIncome-targetSaving)-totalExpense]
 
 const cards= [
   {
@@ -109,6 +111,20 @@ useEffect(()=>{
 
 },[])
 
+let debitTrasactionIndex
+if(typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem("transactionData"))[currentMonthYear]?.transactions?.length>0){
+ debitTrasactionIndex=  JSON.parse(localStorage.getItem("transactionData"))[currentMonthYear]?.transactions.findIndex(item=> item.expenseType==='debit')
+}
+
+const navigateHandler=()=>{
+  router.push({
+    pathname:"/allTransactions",
+    query:{
+      month: currentMonthYear
+    }
+  })
+}
+
 return (
   <div className='w-full py-5 px-6'>
     <div className='flex justify-between items-center flex-wrap w-full mb-12'>
@@ -141,7 +157,7 @@ return (
     <div>
   <div className='flex justify-between items-center flex-wrap my-7'>
         <h3 className='text-2xl tracking-wide text-gray-400'>{dayjs(currentMonthYear).format('MMM, YYYY')}</h3>
-        <p className=' text-yellow-500 tracking-wide'>See all transcations</p>
+        <p className=' text-yellow-500 tracking-wide cursor-pointer hover:text-white' onClick={navigateHandler}>See all transcations</p>
       </div>
     <div className='flex justify-between items-stretch flex-wrap gap-4'>
      {
@@ -156,24 +172,42 @@ return (
     </div>
     <div className='mt-10'>
     <h3 className='text-2xl tracking-wide text-gray-400'>Analytics</h3>
-    <div className='flex justify-between items-center flex-wrap mt-6'>
+    <div className='flex justify-between items-start flex-wrap mt-6'>
         <div className='w-5/12'>
-          <h5 className='text-white tracking-wide text-lg font-semibold mb-6'>
+          <h5 className='text-white tracking-wide text-xl font-semibold mb-6'>
             Income VS. Expense
           </h5>
           <div className='text-white'>graph</div>
         </div>
-        <div className='w-5/12'>
-          <h5 className='text-white tracking-wide text-lg font-semibold mb-6'>
+        {
+             debitTrasactionIndex !== -1 && 
+             <div className='w-5/12'>
+          <h5 className='text-white tracking-wide text-xl font-semibold'>
             Expense domains analytics
           </h5>
-          <div className='text-white'>pie graph</div>
+          <div className='text-white'>
+            <PieChart/>
+          </div>
         </div>
+        }
+        
     </div>
     </div>
+    
     {
-      currentMonthYear!==dayjs().format('YYYY-MM') &&
-      <p className='text-white mt-10'>Hurrah! You saved </p>
+      currentMonthYear!==dayjs().format('YYYY-MM') ?
+      <div className='mt-10 flex justify-center items-center flex-col'>
+        {
+      totalExpense===totalIncome-targetSaving ? 
+      <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>🤩</span> Hurrah! You've achived your monthly target <span className='font-semibold  text-lg text-green-500'>{targetSaving}/-</span></p> :
+      totalExpense< totalIncome-targetSaving ?
+      <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>🥳</span> You have achieved your target plus saved extra <span className='font-semibold  text-lg text-green-500'>{remainingBal}/-</span></p>
+      : <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>☹️</span> You didn't achieve your monthly target, even you spent extra <span className='font-semibold  text-lg text-red-500'>{totalExpense-(totalIncome-targetSaving)}/-</span></p>
+        }
+        <ButtonComponent>Invest now</ButtonComponent>
+      </div>
+      
+      : null
     }
   </div>
   }
