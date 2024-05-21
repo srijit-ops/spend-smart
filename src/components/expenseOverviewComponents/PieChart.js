@@ -86,7 +86,7 @@ function PieChart() {
         };
         
   return (
-    <div className='w-3/4 h-3/4 pt-10'>
+    <div className='pt-10 w-11/12 h-11/12'>
         <Doughnut data={finalData} options={options} />
     </div>
   )

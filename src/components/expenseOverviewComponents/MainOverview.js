@@ -15,6 +15,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import {
   faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
+import LineChart from '../expenseOverviewComponents/LineChart'
 
 
 function MainOverview() {
@@ -92,6 +93,20 @@ const cards= [
     info:"Fixed monthly income"
   },
 ]
+
+let lineChartLables
+
+if(typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem('transactionData'))?.[currentMonthYear]?.transactions?.length>0){
+  let oldLineChartLables= JSON.parse(localStorage.getItem('transactionData'))?.[currentMonthYear]?.transactions?.map((item, index)=>{
+    return dayjs(item.date).format('MMM D')
+  })
+  lineChartLables= [...new Set(oldLineChartLables)].sort((a, b) => {
+    const dateA = dayjs(a, 'MMM D');
+    const dateB = dayjs(b, 'MMM D');
+    return dateA - dateB;
+  })
+}  
+console.log(lineChartLables)
 
 const closeAddExpenseModal=()=>{
   setOpenAddExpense(false)
@@ -178,18 +193,43 @@ return (
      })
 }
     </div>
+    {
+      currentMonthYear!==dayjs().format('YYYY-MM') ?
+      <div className='mt-10 flex justify-center items-center flex-col'>
+        {
+      totalExpense===totalIncome-targetSaving ? 
+      <p className='text-white mb-6 tracking-wider text-xl font-semibold'><span className='text-3xl'>🤩</span> Hurrah! You&apos;ve achived your monthly target <span className='font-semibold  text-2xl text-green-500'>{targetSaving}/-</span></p> :
+      totalExpense< totalIncome-targetSaving ?
+      <p className='text-white mb-6 tracking-wider text-xl font-semibold'><span className='text-3xl'>🥳</span> You have achieved your target plus saved extra <span className='font-semibold  text-2xl text-green-500'>{remainingBal}/-</span></p>
+      : <p className='text-white mb-6 tracking-wider text-xl font-semibold'><span className='text-3xl'>☹️</span> You didn&apos;t achieve your monthly target, even you spent extra <span className='font-semibold  text-2xl text-red-500'>{totalExpense-(totalIncome-targetSaving)}/-</span></p>
+        }
+        <ButtonComponent>
+        <p>
+        Invest now
+          <FontAwesomeIcon icon={faArrowRight} className='ml-2 rotate-[-45deg]'/>
+          </p>
+       </ButtonComponent>
+      </div>
+      
+      : null
+    }
     <div className='mt-10'>
     <h3 className='text-2xl tracking-wide text-gray-400'>📊 Analytics</h3>
     <div className='flex justify-between items-start flex-wrap mt-6'>
-        <div className='w-5/12'>
+      {
+        lineChartLables?.length>=2 &&
+        <div className='w-8/12'>
           <h5 className='text-white tracking-wide text-xl font-semibold mb-6'>
             Income VS. Expense
           </h5>
-          <div className='text-white'>graph</div>
+          <div className='text-white'>
+            <LineChart lineChartLables={lineChartLables}/>
+          </div>
         </div>
+      }
         {
              debitTrasactionIndex !== -1 && 
-             <div className='w-5/12'>
+             <div className='w-1/4'>
           <h5 className='text-white tracking-wide text-xl font-semibold'>
             Expense domains analytics
           </h5>
@@ -202,26 +242,7 @@ return (
     </div>
     </div>
     
-    {
-      currentMonthYear!==dayjs().format('YYYY-MM') ?
-      <div className='mt-10 flex justify-center items-center flex-col'>
-        {
-      totalExpense===totalIncome-targetSaving ? 
-      <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>🤩</span> Hurrah! You&apos;ve achived your monthly target <span className='font-semibold  text-lg text-green-500'>{targetSaving}/-</span></p> :
-      totalExpense< totalIncome-targetSaving ?
-      <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>🥳</span> You have achieved your target plus saved extra <span className='font-semibold  text-lg text-green-500'>{remainingBal}/-</span></p>
-      : <p className='text-white mb-6 tracking-wider'><span className='text-3xl'>☹️</span> You didn&apos;t achieve your monthly target, even you spent extra <span className='font-semibold  text-lg text-red-500'>{totalExpense-(totalIncome-targetSaving)}/-</span></p>
-        }
-        <ButtonComponent>
-        <p>
-        Invest now
-          <FontAwesomeIcon icon={faArrowRight} className='ml-2 rotate-[-45deg]'/>
-          </p>
-       </ButtonComponent>
-      </div>
-      
-      : null
-    }
+   
   </div>
   }
   

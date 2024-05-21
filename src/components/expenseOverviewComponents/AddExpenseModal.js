@@ -26,7 +26,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     expenseDetail: yup
       .string()
       .max(30, "Expense detail must not exceed 30 characters"),
-    amount: yup.number().min(1).required("Expense amount is required"),
+    amount: yup.number().min(1).required("Expense amount is required").typeError('Please enter a number'),
     expenseType: yup.string().required("Expense type is required"),
     expenseCategory: yup.string().required("Expense category is required"),
     date: yup.date().required("Expense date is required"),

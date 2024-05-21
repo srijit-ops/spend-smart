@@ -27,7 +27,6 @@ const {control, reset, formState:{errors}, handleSubmit}= useForm({
     }
 })
 
-
   const onSubmit=(data)=>{
     // const allTransactions= JSON.parse(localStorage.getItem("transactionData")) || {}
     // const currentMonthYear= dayjs(data.date).format('YYYY-MM')

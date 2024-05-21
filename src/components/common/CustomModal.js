@@ -1,6 +1,8 @@
 import React from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import { closeIcon } from "./CloseIcon";
+
 
 
 function CustomModal({
@@ -15,6 +17,7 @@ function CustomModal({
     <Modal
       open={open}
       onClose={onCloseModal}
+      closeIcon={closeIcon}
       center
       styles={{
         modal: {

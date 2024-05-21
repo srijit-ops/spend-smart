@@ -54,11 +54,13 @@ const customStyles = {
     menu: (baseStyles, state) => ({
       ...baseStyles,
       backgroundColor: "#141416",
+      zIndex: 5000,
     }),
     singleValue: (baseStyles, state) => ({
       ...baseStyles,
       color: "white",
     }),
+    menuPortal: (base) => ({ ...base, zIndex: 1202 }),
   };
 
   const onSubmit=(data)=>{
@@ -111,6 +113,7 @@ const customStyles = {
                 isClearable
                 options={targetOptions}
                 styles={customStyles}
+                menuPortalTarget={document.body}
               />
               <p className="tracking-wider text-red-500 mt-3 text-[0.9rem]">
                 {errors.targetPercentage?.message}
