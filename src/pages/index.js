@@ -11,6 +11,7 @@ import {
   faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
 import Head from "next/head";
+import Image from "next/image";
 
 
 export default function Home() {
@@ -58,7 +59,7 @@ export default function Home() {
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className="relative flex flex-col gap-4 items-center justify-center px-4"
+        className="relative flex flex-col gap-4 items-center justify-center px-4 pt-48"
       >
         <div className="text-2xl md:text-6xl font-bold text-white text-center tracking-wide">
           Spend smart
@@ -79,6 +80,16 @@ export default function Home() {
           <FontAwesomeIcon icon={faArrowRight} className='ml-2 rotate-[-45deg]'/>
           </p>
        </ButtonComponent>
+        </div>
+        <div className="w-full flex justify-center items-center mt-6">
+          <div className="w-2/3 rounded-lg">
+          <Image 
+          src={"/projectImg.png"}
+          alt="spend smart image"
+          layout="fill"
+          className={`object-contain img rounded-lg`}
+          />
+          </div>
         </div>
       </motion.div>
     </AuroraBackground>

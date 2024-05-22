@@ -15,6 +15,7 @@ function CustomModal({
 
   return (
     <Modal
+    closeOnOverlayClick={false}
       open={open}
       onClose={onCloseModal}
       closeIcon={closeIcon}

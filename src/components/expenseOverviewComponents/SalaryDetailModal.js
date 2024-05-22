@@ -30,8 +30,8 @@ function SalaryDetailModal({ open, onCloseModal, title }) {
     ])
 
 const validationSchema= yup.object({
-    salary: yup.number().required("Monthly salary is required"),
-    targetPercentage: yup.number().required("Target savings is required")
+    salary: yup.number().required("Monthly salary is required").typeError('Please enter a number'),
+    targetPercentage: yup.number().required("Target savings is required").typeError('Please enter a number (the % sign is not needed)')
 })
 const {control, reset, formState:{errors}, handleSubmit}= useForm({
     resolver:yupResolver(validationSchema),
@@ -50,6 +50,11 @@ const customStyles = {
       ...baseStyles,
       backgroundColor: "#141416",
       color: "white",
+      cursor:"pointer",
+      '&:hover': {
+        backgroundColor: '#333',
+        color: '#eab308',
+      }
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
@@ -78,7 +83,7 @@ const customStyles = {
 
 
   return (
-    <CustomModal open={open} onCloseModal={onCloseModal} title={title}>
+    <CustomModal open={open} onCloseModal={null} title={title}>
     <form onSubmit={handleSubmit(onSubmit)} className="mt-7">
     <Controller
           control={control}

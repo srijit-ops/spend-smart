@@ -130,6 +130,11 @@ function AddExpenseModal({ open, onCloseModal, title }) {
       ...baseStyles,
       backgroundColor: "#141416",
       color: "white",
+      cursor:"pointer",
+      '&:hover': {
+        backgroundColor: '#333',
+        color: '#eab308',
+      }
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
