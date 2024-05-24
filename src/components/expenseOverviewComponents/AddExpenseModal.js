@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import Styles from "../../styles/addExpenseModal.module.css"
+import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 
 function AddExpenseModal({ open, onCloseModal, title }) {
   const [categoryOptions, setCategoryOptions] = useState([
@@ -29,7 +30,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     amount: yup.number().min(1).required("Expense amount is required").typeError('Please enter a number'),
     expenseType: yup.string().required("Expense type is required"),
     expenseCategory: yup.string().required("Expense category is required"),
-    date: yup.date().required("Expense date is required"),
+    date: yup.date().required("Expense date is required")
   });
 
   const {
@@ -46,7 +47,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
       expenseType: "",
       expenseCategory: "",
       date: dayjs().toDate(),
-      time: null,
+      location: null
     },
   });
 
@@ -256,13 +257,26 @@ function AddExpenseModal({ open, onCloseModal, title }) {
             </div>
           )}
         />
-        {/* <Controller
+        <Controller
           control={control}
-          name='time'
-          render={({field: {onChange, value}})=>
-            <TextInput type={"time"} placeholder={"Enter the expense time"} label={"Expense time"} error={errors.time?.message} onChange={onChange}/>
-          }
-          /> */}
+          name="location"
+          render={({ field: { onChange, value } }) => (
+            <div className={`my-4 flex flex-col`}>
+              <label className="text-gray-200 tracking-wider mb-3">
+                Enter the location where you spent money
+              </label>
+              <GooglePlacesAutocomplete
+        selectProps={{
+          value,
+          onChange: onChange, //e=>onChange(e)
+          styles: customStyles
+        }}
+        apiKey="AIzaSyB_ttiP6i1AVnRunsje9SU7LYn1Ldf7Ln0"
+        debounce={1500}
+      />
+            </div>
+          )}
+        />
         <div className="w-full flex justify-center items-center">
           <ButtonComponent type={"submit"}>
             <p>Submit</p>
