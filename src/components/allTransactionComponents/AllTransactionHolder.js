@@ -6,11 +6,21 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import {
   faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from 'next/router';
 
 function AllTransactionHolder() {
     const searchParams= useSearchParams()
+    const router= useRouter()
     const currentMonthYear= searchParams.get("month")
     console.log(currentMonthYear)
+    const navigateHandler=(expenseId)=>{
+      router.push({
+        pathname:"/transactionDetails",
+        query:{
+          id: expenseId
+        }
+      })
+    }
   return (
     <div className='w-full py-5 px-6'>
       <h2 className='text-white text-3xl tracking-wider font-semibold mb-7'>All transactions</h2>
@@ -28,8 +38,8 @@ function AllTransactionHolder() {
         <tbody className="border-t-[16px] border-transparent">
           {
             typeof localStorage !== 'undefined' &&
-              JSON.parse(localStorage.getItem("transactionData"))?.[currentMonthYear]?.transactions?.map((item, index)=>{
-                return <tr key={index} className='border-b border-[#141416] last:border-none'>
+              JSON.parse(localStorage.getItem("transactionData"))?.[currentMonthYear]?.transactions?.map((item)=>{
+                return <tr key={item.id} className='border-b border-[#141416] last:border-none'>
                     <td className="py-4 text-white">
                   {item.expenseName}
                 </td>
@@ -43,7 +53,7 @@ function AllTransactionHolder() {
                   {dayjs(item.date).format('h:mm A, MMMM D, YYYY')}
                 </td>
                 <td className="py-4 text-white cursor-pointer">
-                <FontAwesomeIcon icon={faArrowRight} className='text-white rotate-[-45deg] text-xl hover:text-yellow-500' />
+                <FontAwesomeIcon icon={faArrowRight} className='text-white rotate-[-45deg] text-xl hover:text-yellow-500' onClick={()=>navigateHandler(item.id)}/>
                 </td>
                 </tr>
               })

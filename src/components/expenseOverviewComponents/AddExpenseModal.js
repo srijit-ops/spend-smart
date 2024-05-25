@@ -51,6 +51,18 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     },
   });
 
+  const generateUniqueId=()=>{
+      // Generate a random portion
+    const randomPart = Math.floor(Math.random() * 100000);
+
+    // Get the current timestamp using dayjs
+    const timestamp = dayjs().valueOf().toString(36);
+
+    // Concatenate timestamp and random portion to create the unique ID
+    const uniqueId = timestamp + randomPart;
+
+    return uniqueId;
+  }
   const onSubmit = (data) => {
     console.log(data);
     console.log(dayjs(data.date).toISOString());
@@ -70,8 +82,11 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     const currentMonthYear= dayjs(data.date).format('YYYY-MM')
   //  const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
   //  if(monthMatch!==-1){
-
-    allTransactions[currentMonthYear].transactions.push(data)
+    const finalData= {
+      id: generateUniqueId(),
+      ...data
+    }
+    allTransactions[currentMonthYear].transactions.push(finalData)
   
   //  }else{
   //   allTransactions[currentMonthYear] = [data] 
@@ -271,7 +286,7 @@ function AddExpenseModal({ open, onCloseModal, title }) {
           onChange: onChange, //e=>onChange(e)
           styles: customStyles
         }}
-        apiKey="AIzaSyB_ttiP6i1AVnRunsje9SU7LYn1Ldf7Ln0"
+        // apiKey="AIzaSyB_ttiP6i1AVnRunsje9SU7LYn1Ldf7Ln0"
         debounce={1500}
       />
             </div>
