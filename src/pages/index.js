@@ -21,15 +21,19 @@ export default function Home() {
   const session= useSession()
   const selectedMonth= dayjs().format('YYYY-MM')
   const expenseHandler=async ()=>{
+    console.log(session.data)
+    
     if(!session.data){
       // console.log(signIn())
-      await signIn()
-      router.push({
-        pathname:'expense-overview',
-        query:{
-          month: selectedMonth
-        }
+      await signIn("google",{
+        callbackUrl:`/expense-overview?month=${selectedMonth}`
       })
+      // router.push({
+      //   pathname:'expense-overview',
+      //   query:{
+      //     month: selectedMonth
+      //   }
+      // })
     }else{
       router.push({
         pathname:'expense-overview',

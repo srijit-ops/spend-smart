@@ -23,7 +23,7 @@ import { signOut, useSession } from 'next-auth/react'
 function MainOverview() {
     const searchParams= useSearchParams()
     const session= useSession()
-    console.log(session.data)
+    console.log(session)
 
     const currentMonthYear= searchParams.get("month")
     const router= useRouter()
@@ -159,8 +159,10 @@ const navigateHandler=()=>{
 const signOutHandler=async ()=>{
   
   try {
-    await signOut();
-    router.push("/");
+    await signOut({
+      callbackUrl:"/"
+    });
+    // router.push("/");
   } catch (error) {
     console.error("Error signing out:", error);
   }
