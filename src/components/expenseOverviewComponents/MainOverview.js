@@ -1,7 +1,8 @@
+
 import BorderedButtonComponent from '../common/BorderedButtonComponent'
 import ButtonComponent from '../common/ButtonComponent'
 import React, { useEffect, useState } from 'react'
-// import Link from 'next/link'
+import Link from 'next/link'
 import OverviewCard from './OverviewCard'
 import AddExpenseModal from './AddExpenseModal'
 import dayjs from 'dayjs'
@@ -16,13 +17,18 @@ import {
   faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
 import LineChart from '../expenseOverviewComponents/LineChart'
+import { signOut, useSession } from 'next-auth/react'
 
 
 function MainOverview() {
     const searchParams= useSearchParams()
+    const session= useSession()
+    console.log(session.data)
+
     const currentMonthYear= searchParams.get("month")
     const router= useRouter()
 const [openAddExpense, setOpenAddExpense] = useState(false)
+const [isSignedOut, setIsSignedOut] = useState(false);
 const [openSalaryModal, setOpenSalaryModal] = useState(false)
 const [openSelectMonthModal, setOpenSelectMonthModal] = useState(false)
 // const [totalIncome, setTotalIncome] = useState(0)
@@ -130,6 +136,12 @@ useEffect(()=>{
   }
 
 },[])
+// useEffect(() => {
+//   if (!session?.data && isSignedOut) {
+//     console.log("hello")
+//     router.push("/");
+//   }
+// }, [session, router, isSignedOut]);
 
 let debitTrasactionIndex
 if(typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem("transactionData"))?.[currentMonthYear]?.transactions?.length>0){
@@ -143,6 +155,18 @@ const navigateHandler=()=>{
       month: currentMonthYear
     }
   })
+}
+const signOutHandler=async ()=>{
+  
+  try {
+    await signOut();
+    router.push("/");
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+  // await signOut()
+  // router.push("/")
+  // setIsSignedOut(true)
 }
 
 return (
@@ -162,7 +186,7 @@ return (
             <p className='flex justify-center items-center gap-1'> <span className='text-2xl'>+</span> Add expense</p>
           </ButtonComponent>
           }
-          
+          <p className='text-white' onClick={signOutHandler}>sign out</p>
           {/* <button>All transactions</button> */}
       </div>
   </div>

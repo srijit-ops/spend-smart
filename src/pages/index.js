@@ -12,20 +12,36 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Head from "next/head";
 import Image from "next/image";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 
 export default function Home() {
 
   const router= useRouter()
+  const session= useSession()
   const selectedMonth= dayjs().format('YYYY-MM')
-  const expenseHandler=()=>{
-    router.push({
-      pathname:'expense-overview',
-      query:{
-        month: selectedMonth
-      }
-    })
+  const expenseHandler=async ()=>{
+    if(!session.data){
+      // console.log(signIn())
+      await signIn()
+      router.push({
+        pathname:'expense-overview',
+        query:{
+          month: selectedMonth
+        }
+      })
+    }else{
+      router.push({
+        pathname:'expense-overview',
+        query:{
+          month: selectedMonth
+        }
+      })
+    }
+    
   }
+
+  
 
   return (
     <>
