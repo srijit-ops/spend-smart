@@ -12,7 +12,7 @@ import {
 import { Chart, Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'next/navigation';
-// import faker from 'faker';
+
 
 ChartJS.register(
   CategoryScale,
