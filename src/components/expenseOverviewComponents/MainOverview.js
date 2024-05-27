@@ -156,25 +156,11 @@ const navigateHandler=()=>{
     }
   })
 }
-const signOutHandler=async ()=>{
-  
-  try {
-    await signOut({
-      callbackUrl:"/"
-    });
-    // router.push("/");
-  } catch (error) {
-    console.error("Error signing out:", error);
-  }
-  // await signOut()
-  // router.push("/")
-  // setIsSignedOut(true)
-}
 
 return (
   <div className='w-full py-5 px-6'>
     <div className='flex justify-between items-center flex-wrap w-full mb-12'>
-      <h2 className='text-white text-4xl tracking-wider font-semibold'>Overview</h2>
+      <h2 className='text-white text-2xl tracking-wider '>Welcome, <span className='text-[#EAB308]'>{session?.data?.user?.name}</span></h2>
       <div className='flex justify-between items-center gap-3'>
           {
             typeof localStorage !== 'undefined' && JSON.parse(localStorage.getItem("transactionData")) &&
@@ -188,7 +174,6 @@ return (
             <p className='flex justify-center items-center gap-1'> <span className='text-2xl'>+</span> Add expense</p>
           </ButtonComponent>
           }
-          <p className='text-white' onClick={signOutHandler}>sign out</p>
           {/* <button>All transactions</button> */}
       </div>
   </div>

@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Head from "next/head";
 import Image from "next/image";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn} from "next-auth/react";
 
 
 export default function Home() {

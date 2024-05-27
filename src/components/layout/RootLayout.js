@@ -1,16 +1,13 @@
-// import { useSession } from 'next-auth/react';
-// import  SessionProvider  from './SessionProvider';
+import Header from './Header';
 
 
+function RootLayout({ children }) {
+  return (
+    <>
+            <Header/>
+        {children}
+    </>
+  )
+}
 
-// function RootLayout({ children }) {
-//   const session = useSession();
-
-//   return (
-//         <SessionProvider session={session}>
-//           {children}
-//         </SessionProvider>
-//   )
-// }
-
-// export default RootLayout
+export default RootLayout
