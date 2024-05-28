@@ -1,13 +1,12 @@
-import Header from './Header';
-
+import Header from "./Header";
 
 function RootLayout({ children }) {
   return (
     <>
-            <Header/>
-        {children}
+      <Header />
+      {children}
     </>
-  )
+  );
 }
 
-export default RootLayout
+export default RootLayout;

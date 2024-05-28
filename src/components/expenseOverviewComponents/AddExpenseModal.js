@@ -9,8 +9,13 @@ import ButtonComponent from "../common/ButtonComponent";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
-import Styles from "../../styles/addExpenseModal.module.css"
-import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
+import Styles from "../../styles/addExpenseModal.module.css";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AddExpenseModal({ open, onCloseModal, title }) {
   const [categoryOptions, setCategoryOptions] = useState([
@@ -27,10 +32,14 @@ function AddExpenseModal({ open, onCloseModal, title }) {
     expenseDetail: yup
       .string()
       .max(30, "Expense detail must not exceed 30 characters"),
-    amount: yup.number().min(1).required("Expense amount is required").typeError('Please enter a number'),
+    amount: yup
+      .number()
+      .min(1)
+      .required("Expense amount is required")
+      .typeError("Please enter a number"),
     expenseType: yup.string().required("Expense type is required"),
     expenseCategory: yup.string().required("Expense category is required"),
-    date: yup.date().required("Expense date is required")
+    date: yup.date().required("Expense date is required"),
   });
 
   const {
@@ -47,81 +56,29 @@ function AddExpenseModal({ open, onCloseModal, title }) {
       expenseType: "",
       expenseCategory: "",
       date: dayjs().toDate(),
-      location: null
+      location: null,
     },
   });
 
-  const generateUniqueId=()=>{
-      // Generate a random portion
+  const generateUniqueId = () => {
     const randomPart = Math.floor(Math.random() * 100000);
-
-    // Get the current timestamp using dayjs
     const timestamp = dayjs().valueOf().toString(36);
-
-    // Concatenate timestamp and random portion to create the unique ID
     const uniqueId = timestamp + randomPart;
 
     return uniqueId;
-  }
+  };
   const onSubmit = (data) => {
-    console.log(data);
-    console.log(dayjs(data.date).toISOString());
-    console.log(JSON.parse(localStorage.getItem("transactionData")))
-
-    const allTransactions= JSON.parse(localStorage.getItem("transactionData")) 
-    // const newData= {
-    //   date: dayjs(data.date).toISOString().split('T')[0],
-    //   transactions:[
-    //     {
-    //       // id:,
-    //       ...data
-    //     }
-    //   ]
-    // }
-
-    const currentMonthYear= dayjs(data.date).format('YYYY-MM')
-  //  const monthMatch= Object.keys(allTransactions).findIndex(item=>item===currentMonthYear)
-  //  if(monthMatch!==-1){
-    const finalData= {
+    const allTransactions = JSON.parse(localStorage.getItem("transactionData"));
+    const currentMonthYear = dayjs(data.date).format("YYYY-MM");
+    const finalData = {
       id: generateUniqueId(),
-      ...data
-    }
-    allTransactions[currentMonthYear].transactions.push(finalData)
-  
-  //  }else{
-  //   allTransactions[currentMonthYear] = [data] 
-  //  }
-   localStorage.setItem("transactionData", JSON.stringify(allTransactions))
-    // if(allTransactions){
-      // console.log(allTransactions,"moth ka middle hai bro")
-      // const dateMatch= allTransactions.findIndex(item=>item.date=== dayjs(data.date).toISOString().split('T')[0])
-      // if(dateMatch!==-1){
-      //   allTransactions[dateMatch].transactions.push(data)
-      // }else{
-      //   allTransactions.push(newData)
-      // }
-      // localStorage.setItem("transactionData", JSON.stringify(allTransactions))
-    // }
-
-    //when a new month is starting and no data there in storage
-
-    // const newData=[
-    //   // {
-    //   //   date: dayjs(data.date).toISOString(),
-    //   //   transactions:[
-    //   //     {
-    //   //       // id:,
-    //   //       ...data
-    //   //     }
-    //   //   ]
-    //   // }
-    // ]
-    // newData.push(commonData)
-    // console.log(newData)
-    // localStorage.setItem("transactionData", JSON.stringify(newData))
-
+      ...data,
+    };
+    allTransactions[currentMonthYear].transactions.push(finalData);
+    localStorage.setItem("transactionData", JSON.stringify(allTransactions));
     onCloseModal();
     reset();
+    toast("Expense added successfully");
   };
 
   const expenseTypeOptions = [
@@ -146,11 +103,11 @@ function AddExpenseModal({ open, onCloseModal, title }) {
       ...baseStyles,
       backgroundColor: "#141416",
       color: "white",
-      cursor:"pointer",
-      '&:hover': {
-        backgroundColor: '#333',
-        color: '#eab308',
-      }
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "#333",
+        color: "#eab308",
+      },
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
@@ -251,14 +208,11 @@ function AddExpenseModal({ open, onCloseModal, title }) {
               <label className="text-gray-200 tracking-wider mb-3">
                 Select expense date and time
               </label>
-              {/* <TextInput type={"date"} placeholder={"Enter the expense date"} label={"Expense date"} error={errors.date?.message} onChange={onChange}/> */}
               <DatePicker
                 selected={value}
                 onChange={onChange}
-                // showTimeSelect
-                // dateFormat="Pp"
                 placeholderText="Click to select date and time"
-                minDate={dayjs().subtract(2, 'days').toDate()}
+                minDate={dayjs().subtract(2, "days").toDate()}
                 // minDate={dayjs().toDate()}
                 maxDate={dayjs().toDate()}
                 timeInputLabel="Time:"
@@ -281,14 +235,13 @@ function AddExpenseModal({ open, onCloseModal, title }) {
                 Enter the location where you spent money
               </label>
               <GooglePlacesAutocomplete
-        selectProps={{
-          value,
-          onChange: onChange, //e=>onChange(e)
-          styles: customStyles
-        }}
-        // apiKey="AIzaSyB_ttiP6i1AVnRunsje9SU7LYn1Ldf7Ln0"
-        debounce={1500}
-      />
+                selectProps={{
+                  value,
+                  onChange: onChange, //e=>onChange(e)
+                  styles: customStyles,
+                }}
+                debounce={1500}
+              />
             </div>
           )}
         />

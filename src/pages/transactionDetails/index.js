@@ -1,24 +1,43 @@
-import React from 'react'
-import dynamic from 'next/dynamic'
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import { useRouter } from 'next/router';
+import React from "react";
+import dynamic from "next/dynamic";
+import { getServerSession } from "next-auth";
 
-const TransactionDetailsComponent= dynamic(()=>import("../../components/transactiondetailcomps/TransactionDetailsComponent"),{
-    ssr:false
-})
+const TransactionDetailsComponent = dynamic(
+  () =>
+    import(
+      "../../components/transactiondetailcomps/TransactionDetailsComponent"
+    ),
+  {
+    ssr: false,
+  }
+);
 
-function TransactionDetails() {
-  const session= useSession()
-  const router= useRouter()
-  // if (!session || !session.data) {
-  //   router.push("api/auth/signin")
-  // }
+function TransactionDetails({ session }) {
   return (
     <div>
-        <TransactionDetailsComponent/>
+      <TransactionDetailsComponent />
     </div>
-  )
+  );
 }
 
-export default TransactionDetails
+export default TransactionDetails;
+
+export const getServerSideProps = async (context) => {
+  const { req, res, query } = context;
+  const session = await getServerSession(req, res);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=/transactionDetails?id=${query.id}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};

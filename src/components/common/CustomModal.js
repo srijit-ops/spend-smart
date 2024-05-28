@@ -3,19 +3,10 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { closeIcon } from "./CloseIcon";
 
-
-
-function CustomModal({
-  open,
-  onCloseModal,
-  title,
-  children,
-  ...props
-}) {
-
+function CustomModal({ open, onCloseModal, title, children, ...props }) {
   return (
     <Modal
-    closeOnOverlayClick={false}
+      closeOnOverlayClick={false}
       open={open}
       onClose={onCloseModal}
       closeIcon={closeIcon}

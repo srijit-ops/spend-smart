@@ -1,18 +1,36 @@
-import { useSession } from 'next-auth/react'
-import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
- 
-const AllTransactionsComponent = dynamic(() => import('../../components/allTransactionComponents/AllTransactionHolder'), {
-  ssr: false,
-})
+import dayjs from "dayjs";
+import { getServerSession } from "next-auth";
+import dynamic from "next/dynamic";
 
-function AllTransactions() {
-  const session= useSession()
-  const router= useRouter()
-  // if (!session || !session.data) {
-  //   router.push("api/auth/signin")
-  // }
-    return <AllTransactionsComponent/>
+const AllTransactionsComponent = dynamic(
+  () =>
+    import("../../components/allTransactionComponents/AllTransactionHolder"),
+  {
+    ssr: false,
+  }
+);
+
+function AllTransactions({ session }) {
+  return <AllTransactionsComponent />;
 }
 
-export default AllTransactions
+export default AllTransactions;
+
+export const getServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res);
+  const currentMonth = dayjs().format("YYYY-MM");
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=/allTransactions?month=${currentMonth}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
