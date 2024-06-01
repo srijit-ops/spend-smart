@@ -9,7 +9,7 @@ import {
   } from "@/components/ui/card"
   
 
-function OverviewCard({cardTitle, value}) {
+function OverviewCard({cardTitle, value, info}) {
   return (
     <Card>
   <CardHeader>
@@ -17,7 +17,8 @@ function OverviewCard({cardTitle, value}) {
     {/* <CardDescription>Card Description</CardDescription> */}
   </CardHeader>
   <CardContent>
-    <p className='text-2xl text-white font-semibold tracking-wider'>{value}</p>
+    <p className='tracking-wider text-gray-500 mb-4 text-[0.9rem]'>{info}</p>
+    <p className='text-2xl text-white font-semibold tracking-wider'>{value} /-</p>
   </CardContent>
   {/* <CardFooter>
     <p>Card Footer</p>

@@ -16,7 +16,7 @@ const router= useRouter()
 const searchParams= useSearchParams()
 
 const minMonth= typeof localStorage !== 'undefined' && localStorage.getItem("transactionData") ? Object.keys(JSON.parse(localStorage.getItem("transactionData")))[0] : null
-const maxMonth= searchParams.get("month")
+const maxMonth= dayjs().format("YYYY-MM")
 const validationSchema= yup.object({
     month: yup.date().required("Month is required"),
 })
