@@ -1,4 +1,3 @@
-"use client";
 import BorderedButtonComponent from "@/components/common/BorderedButtonComponent";
 import ButtonComponent from "@/components/common/ButtonComponent";
 import { AuroraBackground } from "../components/landingPageComponents/aurora-background";
@@ -6,6 +5,12 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import {
+  faArrowRight
+} from "@fortawesome/free-solid-svg-icons";
+import Head from "next/head";
 
 
 export default function Home() {
@@ -22,7 +27,28 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <>
+    <Head>
+        <title>Spend Smart</title>
+        <meta property="og:title" content="Spend Smart" />
+        <meta property="og:image" content="/vercel.svg" />
+        <meta
+          property="og:description"
+          content="Cultivate good financial habits and make better investment decisions for a brighter future."
+        />
+        <meta
+          name="description"
+          content="An intelligent expense tracker which cultivates good financial habits and helps to make better investment decisions."
+        ></meta>
+        <link
+          rel="shortcut icon"
+          href="/vercel.svg"
+          type="image/x-icon"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+      </Head>
+      <main>
     <AuroraBackground>
       <motion.div
         initial={{ opacity: 0.0, y: 40 }}
@@ -42,16 +68,23 @@ export default function Home() {
         </div>
         <div className="flex justify-between items-center flex-wrap gap-6 mt-8"> 
         <BorderedButtonComponent>
-          <p>Browse stocks</p>
+          <p>
+            Browse stocks
+            <FontAwesomeIcon icon={faArrowRight} className='ml-2 rotate-[-45deg]'/>
+            </p>
         </BorderedButtonComponent>
        <ButtonComponent onClick={expenseHandler}>
-        <p>Track expense</p>
+        <p>
+          Track expense
+          <FontAwesomeIcon icon={faArrowRight} className='ml-2 rotate-[-45deg]'/>
+          </p>
        </ButtonComponent>
         </div>
       </motion.div>
     </AuroraBackground>
 
     </main>
+    </>
   );
 }
 

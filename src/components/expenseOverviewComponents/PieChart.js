@@ -8,7 +8,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function PieChart() {
   const searchParams= useSearchParams()
   const currentMonthYear= searchParams.get("month")
-    const debitTransactions= JSON.parse(localStorage.getItem("transactionData"))[currentMonthYear]?.transactions?.filter(item=>
+    const debitTransactions= JSON.parse(localStorage.getItem("transactionData"))?.[currentMonthYear]?.transactions?.filter(item=>
       item.expenseType==='debit'
         // return item.expenseCategory
       // }
@@ -20,7 +20,7 @@ function PieChart() {
   
     const values= finalLabels.map(data=>{
       let initialVal=0
-      JSON.parse(localStorage.getItem("transactionData"))[currentMonthYear]?.transactions?.forEach(item=>{
+      JSON.parse(localStorage.getItem("transactionData"))?.[currentMonthYear]?.transactions?.forEach(item=>{
         if(data=== item.expenseCategory && item.expenseType==='debit'){
           initialVal+=item.amount
         }
